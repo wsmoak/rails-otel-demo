@@ -31,6 +31,12 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
 
+# OpenTelemetry
+gem 'opentelemetry-sdk', '~> 1.6'
+gem "opentelemetry-instrumentation-rails", "~> 0.33.0"
+gem 'opentelemetry-exporter-otlp', '~> 0.29.1'
+gem 'opentelemetry-exporter-otlp-logs', '~> 0.1.0'
+
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
