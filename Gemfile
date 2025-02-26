@@ -32,7 +32,7 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "bootsnap", require: false
 
 # OpenTelemetry
-gem 'opentelemetry-sdk', '~> 1.6'
+gem 'opentelemetry-sdk', '~> 1.8'
 gem "opentelemetry-instrumentation-rails", "~> 0.33.0"
 gem 'opentelemetry-exporter-otlp', '~> 0.29.1'
 gem 'opentelemetry-exporter-otlp-logs', '~> 0.1.0'
