@@ -32,10 +32,10 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "bootsnap", require: false
 
 # OpenTelemetry
-gem 'opentelemetry-sdk', '~> 1.6'
-gem "opentelemetry-instrumentation-rails", "~> 0.33.0"
-gem 'opentelemetry-exporter-otlp', '~> 0.29.1'
-gem 'opentelemetry-exporter-otlp-logs', '~> 0.1.0'
+gem "opentelemetry-sdk", "~> 1.8"
+gem "opentelemetry-instrumentation-rails", "~> 0.36.0"
+gem "opentelemetry-exporter-otlp", "~> 0.30.0"
+gem "opentelemetry-exporter-otlp-logs", "~> 0.2.0"
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
@@ -55,4 +55,3 @@ group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
 end
-
