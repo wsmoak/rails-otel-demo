@@ -393,6 +393,7 @@ DEPENDENCIES
   jbuilder
   opentelemetry-exporter-otlp (~> 0.30.0)
   opentelemetry-exporter-otlp-logs (~> 0.2.0)
+  opentelemetry-instrumentation-rack
   opentelemetry-instrumentation-rails (~> 0.36.0)
   opentelemetry-sdk (~> 1.8)
   puma (>= 5.0)
