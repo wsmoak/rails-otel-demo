@@ -24,5 +24,12 @@ OpenTelemetry::SDK.configure do |c|
   # setting this would take precedence over the OTEL_SERVICE_NAME env var
   c.service_name = ENV.fetch('OTEL_SERVICE_NAME', 'from_config_initializer')
 
-  c.use_all() # enables all instrumentation!
+  c.use 'OpenTelemetry::Instrumentation::Rails'
+
+  c.use 'OpenTelemetry::Instrumentation::Rack', {
+    response_propagators: [OpenTelemetry::Trace::Propagation::TraceContext::ResponseTextMapPropagator.new],
+    allowed_response_headers: ['X-Request-ID']
+  }
+
+  #c.use_all() # enables all instrumentation!
 end

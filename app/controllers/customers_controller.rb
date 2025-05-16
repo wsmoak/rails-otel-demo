@@ -14,6 +14,7 @@ class CustomersController < ApplicationController
       'acorns' => false,
       'foo' => 'bar',
       'customer_id' => 12345,
+      'http.response.header.X-Request-ID' => request.uuid,
     )
 
     Rails.logger.info 'END Index view accessed'

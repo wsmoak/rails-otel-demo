@@ -244,6 +244,9 @@ GEM
       opentelemetry-common (~> 0.20)
       opentelemetry-registry (~> 0.2)
       opentelemetry-semantic_conventions
+    opentelemetry-sdk-experimental (0.4.0)
+      opentelemetry-api (~> 1.1)
+      opentelemetry-sdk (~> 1.2)
     opentelemetry-semantic_conventions (1.11.0)
       opentelemetry-api (~> 1.0)
     parallel (1.26.3)
@@ -396,6 +399,7 @@ DEPENDENCIES
   opentelemetry-instrumentation-rack
   opentelemetry-instrumentation-rails (~> 0.36.0)
   opentelemetry-sdk (~> 1.8)
+  opentelemetry-sdk-experimental
   puma (>= 5.0)
   rails (~> 8.0.2)
   rubocop-rails-omakase
