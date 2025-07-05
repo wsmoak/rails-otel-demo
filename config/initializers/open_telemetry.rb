@@ -1,5 +1,6 @@
 require 'opentelemetry/sdk'
 require 'opentelemetry/instrumentation/rails'
+require 'logger'
 
 def parse_resource_attributes(attr_string)
   return {} if attr_string.nil?
@@ -11,6 +12,11 @@ def parse_resource_attributes(attr_string)
 end
 
 resource_attrs = parse_resource_attributes(ENV['OTEL_RESOURCE_ATTRIBUTES'])
+
+# Configure OpenTelemetry SDK internal logging to file
+otel_log_file = Rails.root.join('log', 'opentelemetry_sdk.log')
+OpenTelemetry.logger = Logger.new(otel_log_file, 'daily')
+OpenTelemetry.logger.level = Logger::INFO
 
 OpenTelemetry::SDK.configure do |c|
   SCR = OpenTelemetry::SemanticConventions::Resource
