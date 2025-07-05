@@ -3,17 +3,14 @@ class CustomersController < ApplicationController
   def index
     Rails.logger.info 'START Index view accessed'
 
-    RailsOTelDemo::Logger.log(
-      'Quercus rubra',
-      'acorns' => true,
-      'leaves' => true,
-    )
+    the_fruit = ['peach', 'apple', 'cherry', 'banana'].sample
 
     RailsOTelDemo::Logger.log(
-      'Fagus grandifolia',
-      'acorns' => false,
-      'foo' => 'bar',
-      'customer_id' => 12345,
+      'A descriptive log message',
+      'acorns' => [true,false].sample,
+      'customer_id' => rand(1..9_999),
+      'fruit' => the_fruit,
+      'original_fruit' => the_fruit
     )
 
     Rails.logger.info 'END Index view accessed'
