@@ -1,5 +1,9 @@
 require 'opentelemetry/sdk'
 require 'opentelemetry/instrumentation/rails'
+require 'opentelemetry/instrumentation/rack'
+require 'opentelemetry/exporter/otlp'
+require 'opentelemetry/sdk/metrics'
+#require 'opentelemetry/exporter/otlp/metrics'
 require 'logger'
 
 def parse_resource_attributes(attr_string)
@@ -16,7 +20,7 @@ resource_attrs = parse_resource_attributes(ENV['OTEL_RESOURCE_ATTRIBUTES'])
 # Configure OpenTelemetry SDK internal logging to file
 otel_log_file = Rails.root.join('log', 'opentelemetry_sdk.log')
 OpenTelemetry.logger = Logger.new(otel_log_file, 'daily')
-OpenTelemetry.logger.level = Logger::INFO
+OpenTelemetry.logger.level = Logger::DEBUG
 
 OpenTelemetry::SDK.configure do |c|
   SCR = OpenTelemetry::SemanticConventions::Resource
@@ -32,3 +36,10 @@ OpenTelemetry::SDK.configure do |c|
 
   c.use_all() # enables all instrumentation!
 end
+
+# Add a metrics reader for OTLP exporter
+metric_exporter = OpenTelemetry::Exporter::OTLP::Metrics::MetricsExporter.new
+periodic_metric_reader = OpenTelemetry::SDK::Metrics::Export::PeriodicMetricReader.new(exporter: metric_exporter)
+OpenTelemetry.meter_provider.add_metric_reader(periodic_metric_reader)
+
+

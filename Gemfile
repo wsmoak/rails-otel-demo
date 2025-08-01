@@ -36,6 +36,8 @@ gem "opentelemetry-sdk", "~> 1.8"
 gem "opentelemetry-instrumentation-rails", "~> 0.36.0"
 gem "opentelemetry-exporter-otlp", "~> 0.30.0"
 gem "opentelemetry-exporter-otlp-logs", "~> 0.2.0"
+gem "opentelemetry-metrics-sdk", "~> 0.2.0"
+gem "opentelemetry-exporter-otlp-metrics", "~> 0.2.0"
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
