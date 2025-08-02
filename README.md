@@ -137,3 +137,4 @@ Meanwhile, we can change it with an environment variable.
 Start the app with:
 `$ OTEL_LOGS_EXPORTER=otlp OTEL_METRICS_EXPORTER=otlp OTEL_METRIC_EXPORT_INTERVAL=5000 OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE=cumulative bundle exec rails server -p 3001`
 
+(Or use the dotenv-rails gem and set these in the .env.development file.)
