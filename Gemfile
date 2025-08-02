@@ -32,12 +32,12 @@ gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "bootsnap", require: false
 
 # OpenTelemetry
-gem "opentelemetry-sdk", "~> 1.8"
 gem "opentelemetry-instrumentation-rails", "~> 0.36.0"
-gem "opentelemetry-exporter-otlp", "~> 0.30.0"
-gem "opentelemetry-exporter-otlp-logs", "~> 0.2.0"
-gem "opentelemetry-metrics-sdk", "~> 0.2.0"
-gem "opentelemetry-exporter-otlp-metrics", "~> 0.2.0"
+gem "opentelemetry-sdk", path: "/Users/wsmoak/Projects/opentelemetry-ruby/sdk"
+gem "opentelemetry-exporter-otlp", path: "/Users/wsmoak/Projects/opentelemetry-ruby/exporter/otlp"
+gem "opentelemetry-exporter-otlp-logs", path: "/Users/wsmoak/Projects/opentelemetry-ruby/exporter/otlp-logs"
+gem "opentelemetry-metrics-sdk", path: "/Users/wsmoak/Projects/opentelemetry-ruby/metrics_sdk"
+gem "opentelemetry-exporter-otlp-metrics", path: "/Users/wsmoak/Projects/opentelemetry-ruby/exporter/otlp-metrics"
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"

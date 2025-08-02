@@ -125,3 +125,15 @@ Don't forget to un-comment the code in `config/initializers/inflections.rb` and 
 ### AI
 
 I used Anthropic's Claude 3.5 Sonnet for help with some of the code and to draft this blog post.  It really is awesome.  Keep notes in the README.md file of a project while you are learning something new, and then ask it (using the VS Code Github Copilot plugin) "@workspace look at the open_telemetry.rb, logger.rb, and README.md files and write a blog post explaining what I've learned".
+
+## Configuring OpenTelemetry Metrics in a Rails Application
+
+Now let's explore how to add metrics to the example Rails app using the OTel Ruby SDK.
+
+By default the SDK sends deltas for counters, though there is a comment in the code that the default should be cumulative.  See https://github.com/open-telemetry/opentelemetry-ruby/issues/1555
+
+Meanwhile, we can change it with an environment variable.
+
+Start the app with:
+`$ OTEL_LOGS_EXPORTER=otlp OTEL_METRICS_EXPORTER=otlp OTEL_METRIC_EXPORT_INTERVAL=5000 OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE=cumulative bundle exec rails server -p 3001`
+

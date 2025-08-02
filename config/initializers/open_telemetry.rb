@@ -43,3 +43,5 @@ periodic_metric_reader = OpenTelemetry::SDK::Metrics::Export::PeriodicMetricRead
 OpenTelemetry.meter_provider.add_metric_reader(periodic_metric_reader)
 
 
+RAILS_OTEL_CUSTOMERS_INDEX_COUNTER = OpenTelemetry.meter_provider.meter('rails-otel-demo-meter')
+  .create_counter('customers_index_accessed', unit: 'access', description: 'Number of times customers#index was accessed')
