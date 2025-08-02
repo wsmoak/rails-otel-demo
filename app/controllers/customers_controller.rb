@@ -26,6 +26,9 @@ class CustomersController < ApplicationController
         }
     )
 
+    mem = GetProcessMem.new
+    Rails.logger.info "Memory usage: #{mem.mb} MB"
+
     Rails.logger.info 'END Index view accessed'
   end
 end

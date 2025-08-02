@@ -39,6 +39,8 @@ gem "opentelemetry-exporter-otlp-logs", path: "/Users/wsmoak/Projects/openteleme
 gem "opentelemetry-metrics-sdk", path: "/Users/wsmoak/Projects/opentelemetry-ruby/metrics_sdk"
 gem "opentelemetry-exporter-otlp-metrics", path: "/Users/wsmoak/Projects/opentelemetry-ruby/exporter/otlp-metrics"
 
+gem "get_process_mem"
+
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
