@@ -37,10 +37,11 @@ OpenTelemetry::SDK.configure do |c|
   c.use_all() # enables all instrumentation!
 end
 
+# This happens by default in the configuration patch
 # Add a metrics reader for OTLP exporter
-metric_exporter = OpenTelemetry::Exporter::OTLP::Metrics::MetricsExporter.new
-periodic_metric_reader = OpenTelemetry::SDK::Metrics::Export::PeriodicMetricReader.new(exporter: metric_exporter)
-OpenTelemetry.meter_provider.add_metric_reader(periodic_metric_reader)
+#metric_exporter = OpenTelemetry::Exporter::OTLP::Metrics::MetricsExporter.new
+#periodic_metric_reader = OpenTelemetry::SDK::Metrics::Export::PeriodicMetricReader.new(exporter: metric_exporter)
+#OpenTelemetry.meter_provider.add_metric_reader(periodic_metric_reader)
 
 
 RAILS_OTEL_CUSTOMERS_INDEX_COUNTER = OpenTelemetry.meter_provider.meter('rails-otel-demo-meter')
