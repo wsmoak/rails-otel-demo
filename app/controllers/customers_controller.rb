@@ -14,18 +14,19 @@ class CustomersController < ApplicationController
       'original_fruit' => the_fruit
     )
 
-    puts "THE COUNTER IS #{RAILS_OTEL_CUSTOMERS_INDEX_COUNTER.inspect}"
-    puts "ABOUT TO ADD TO THE RAILS_OTEL_CUSTOMERS_INDEX_COUNTER"
-    RAILS_OTEL_CUSTOMERS_INDEX_COUNTER.add(
+    puts "THE COUNTER IS #{CUSTOMERS_INDEX_COUNTER.inspect}"
+    puts "ABOUT TO ADD TO THE CUSTOMERS_INDEX_COUNTER metric"
+    CUSTOMERS_INDEX_COUNTER.add(
         1,
         attributes: {
             'controller' => 'customers',
             'action' => 'index',
             'fruit' => the_fruit,
-            'customer_id' => customer_id,
+            # 'customer_id' => customer_id,
         }
     )
 
+    Rails.logger.info "Temporality preference is #{ENV['OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE']}"
     mem = GetProcessMem.new
     Rails.logger.info "Memory usage: #{mem.mb} MB"
 
