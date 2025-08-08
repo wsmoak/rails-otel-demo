@@ -45,7 +45,17 @@ end
 
 
 OTEL_METER = OpenTelemetry.meter_provider.meter('rails-otel-demo-meter')
-CUSTOMERS_INDEX_COUNTER = OTEL_METER.create_counter('customers_index_accessed', unit: 'access', description: 'Number of times customers#index was accessed')
+CUSTOMERS_INDEX_COUNTER = OTEL_METER.create_counter(
+  'customers_index_accessed',
+  unit: 'access',
+  description: 'Number of times customers#index was accessed'
+)
+
+PROCESS_MEMORY_GAUGE = OTEL_METER.create_gauge(
+  'process.memory',
+  unit: 'MB',
+  description: 'Memory usage of the Rails process in MB'
+)
 
 # Observable Gauge metric does not work yet
 # https://github.com/open-telemetry/opentelemetry-ruby/issues/1877
