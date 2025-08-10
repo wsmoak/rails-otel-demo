@@ -39,6 +39,9 @@ gem "opentelemetry-exporter-otlp-logs", path: "/Users/wsmoak/Projects/openteleme
 gem "opentelemetry-metrics-sdk", path: "/Users/wsmoak/Projects/opentelemetry-ruby/metrics_sdk"
 gem "opentelemetry-exporter-otlp-metrics", path: "/Users/wsmoak/Projects/opentelemetry-ruby/exporter/otlp-metrics"
 
+#gem "statsd-instrument"
+gem "dogstatsd-ruby", "~> 4.0", require: "datadog/statsd"
+
 gem "get_process_mem"
 
 gem 'dotenv-rails', groups: [:development, :test]

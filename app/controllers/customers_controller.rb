@@ -14,8 +14,6 @@ class CustomersController < ApplicationController
       'original_fruit' => the_fruit
     )
 
-    puts "THE COUNTER IS"
-    pp CUSTOMERS_INDEX_COUNTER
     CUSTOMERS_INDEX_COUNTER.add(
         1,
         attributes: {
@@ -26,12 +24,12 @@ class CustomersController < ApplicationController
         }
     )
 
+    $statsd.increment('statsd_customers_index_counter')
+
     Rails.logger.info "Temporality preference is #{ENV['OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE']}"
 
     mem = GetProcessMem.new
     Rails.logger.info "Memory usage: #{mem.mb} MB"
-    puts "THE GAUGE IS"
-    pp PROCESS_MEMORY_GAUGE
     PROCESS_MEMORY_GAUGE.record(mem.mb)
 
     Rails.logger.info 'END Index view accessed'
