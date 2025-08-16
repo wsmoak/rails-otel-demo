@@ -14,15 +14,12 @@ class CustomersController < ApplicationController
       'original_fruit' => the_fruit
     )
 
-    puts "THE COUNTER IS"
-    pp CUSTOMERS_INDEX_COUNTER
     CUSTOMERS_INDEX_COUNTER.add(
         1,
         attributes: {
             'controller' => 'customers',
             'action' => 'index',
             'fruit' => the_fruit,
-            # 'customer_id' => customer_id,
         }
     )
 
@@ -30,9 +27,14 @@ class CustomersController < ApplicationController
 
     mem = GetProcessMem.new
     Rails.logger.info "Memory usage: #{mem.mb} MB"
-    puts "THE GAUGE IS"
-    pp PROCESS_MEMORY_GAUGE
-    PROCESS_MEMORY_GAUGE.record(mem.mb)
+
+    PROCESS_MEMORY_GAUGE.record(
+        mem.mb,
+        attributes: {
+            'process.id' => Process.pid,
+            "thread.id" => Thread.current.object_id
+        }
+    )
 
     Rails.logger.info 'END Index view accessed'
   end
