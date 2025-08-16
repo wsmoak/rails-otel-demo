@@ -33,11 +33,11 @@ gem "bootsnap", require: false
 
 # OpenTelemetry
 gem "opentelemetry-instrumentation-rails", "~> 0.36.0"
-gem "opentelemetry-sdk", path: "/Users/wsmoak/Projects/opentelemetry-ruby/sdk"
-gem "opentelemetry-exporter-otlp", path: "/Users/wsmoak/Projects/opentelemetry-ruby/exporter/otlp"
-gem "opentelemetry-exporter-otlp-logs", path: "/Users/wsmoak/Projects/opentelemetry-ruby/exporter/otlp-logs"
-gem "opentelemetry-metrics-sdk", path: "/Users/wsmoak/Projects/opentelemetry-ruby/metrics_sdk"
-gem "opentelemetry-exporter-otlp-metrics", path: "/Users/wsmoak/Projects/opentelemetry-ruby/exporter/otlp-metrics"
+gem "opentelemetry-sdk", "~> 1.8.1"
+gem "opentelemetry-exporter-otlp", "~> 0.30.0"
+gem "opentelemetry-exporter-otlp-logs", "~> 0.2.1"
+gem "opentelemetry-metrics-sdk", "~> 0.8.0"
+gem "opentelemetry-exporter-otlp-metrics", "~> 0.6.0"
 
 gem "get_process_mem"
 
