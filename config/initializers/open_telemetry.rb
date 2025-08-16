@@ -57,14 +57,22 @@ PROCESS_MEMORY_GAUGE = OTEL_METER.create_gauge(
   description: 'Memory usage of the Rails process in MB'
 )
 
-# Observable Gauge metric does not work yet
-# https://github.com/open-telemetry/opentelemetry-ruby/issues/1877
-#PROCESS_MEMORY_GAUGE = OTEL_METER.create_observable_gauge(
-#  'process.memory.mb',
-#  unit: 'MB',
-#  description: 'Memory usage of the Rails process in MB',
-#  callback: ->(observer) {
-#    mem = GetProcessMem.new
-#    observer.observe(mem.mb, {})
-#  }
-#)
+PROCESS_MEMORY_OBSERVED_GAUGE = OTEL_METER.create_observable_gauge(
+  'process.memory.observed',
+  unit: 'MB',
+  description: 'Memory usage of the process in MB',
+  callback: -> {
+    mem = GetProcessMem.new
+    puts "THE CALLBACK WAS CALLED! #{Time.now} pid: #{Process.pid} tid: #{Thread.current.object_id} mem: #{mem.mb}"
+    mem.mb
+  }
+)
+
+# This calls 'update' as well as recording an observation
+PROCESS_MEMORY_OBSERVED_GAUGE.observe(
+    timeout: 10,
+    attributes: {
+        "process.id" => Process.pid,
+         "thread.id" => Thread.current.object_id
+    }
+)
