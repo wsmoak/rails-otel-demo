@@ -42,29 +42,3 @@ end
 # metric_exporter = OpenTelemetry::Exporter::OTLP::Metrics::MetricsExporter.new
 # periodic_metric_reader = OpenTelemetry::SDK::Metrics::Export::PeriodicMetricReader.new(exporter: metric_exporter)
 # OpenTelemetry.meter_provider.add_metric_reader(periodic_metric_reader)
-
-
-OTEL_METER = OpenTelemetry.meter_provider.meter('rails-otel-demo-meter')
-
-PROCESS_MEMORY_OBSERVED_GAUGE = OTEL_METER.create_observable_gauge(
-  'process.memory.observed',
-  unit: 'MB',
-  description: 'Memory usage of the process in MB',
-  callback: -> {
-    mem = GetProcessMem.new
-    puts "THE CALLBACK WAS CALLED! #{Time.now} pid: #{Process.pid} tid: #{Thread.current.object_id} mem: #{mem.mb}"
-    mem.mb
-  }
-)
-
-puts "THE OBSERVABLE GAUGE"
-pp PROCESS_MEMORY_OBSERVED_GAUGE
-# This calls 'update' as well as recording an observation
-PROCESS_MEMORY_OBSERVED_GAUGE.observe(
-    timeout: 30, # seconds?
-    attributes: {
-      "host.name" => Socket.gethostname,
-      "process.id" => Process.pid,
-      "thread.id" => Thread.current.object_id
-    }
-)
