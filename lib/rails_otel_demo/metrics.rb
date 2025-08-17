@@ -27,6 +27,23 @@ module RailsOTelDemo
         description: description
       )
       instrument_registry[instrument_name] = instrument
+      instrument
+    end
+
+    def self.create_observable_gauge(instrument_name, unit:, description:, callback:)
+      instrument = OTEL_METER.create_observable_gauge(
+        instrument_name,
+        unit: unit,
+        description: description,
+        callback: callback
+      )
+      instrument_registry[instrument_name] = instrument
+      instrument
+    end
+
+    def self.observe(instrument_name, timeout: nil, attributes: {})
+      instrument = find_instrument(instrument_name)
+      instrument.observe(timeout: timeout, attributes: attributes)
     end
 
     def self.add(instrument_name, value, **attributes)
