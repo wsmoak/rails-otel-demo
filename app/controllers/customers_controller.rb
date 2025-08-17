@@ -17,6 +17,7 @@ class CustomersController < ApplicationController
     CUSTOMERS_INDEX_COUNTER.add(
         1,
         attributes: {
+            'host.name' => Socket.gethostname,
             'controller' => 'customers',
             'action' => 'index',
             'fruit' => the_fruit,
@@ -31,6 +32,7 @@ class CustomersController < ApplicationController
     PROCESS_MEMORY_GAUGE.record(
         mem.mb,
         attributes: {
+            'host.name' => Socket.gethostname,
             'process.id' => Process.pid,
             "thread.id" => Thread.current.object_id
         }

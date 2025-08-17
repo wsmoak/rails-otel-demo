@@ -46,8 +46,8 @@ end
 
 OTEL_METER = OpenTelemetry.meter_provider.meter('rails-otel-demo-meter')
 CUSTOMERS_INDEX_COUNTER = OTEL_METER.create_counter(
-  'customers_index_accessed',
-  unit: 'access',
+  'controller_access',
+  unit: 'requests',
   description: 'Number of times customers#index was accessed'
 )
 
@@ -70,9 +70,10 @@ PROCESS_MEMORY_OBSERVED_GAUGE = OTEL_METER.create_observable_gauge(
 
 # This calls 'update' as well as recording an observation
 PROCESS_MEMORY_OBSERVED_GAUGE.observe(
-    timeout: 10,
+    timeout: 30, # seconds?
     attributes: {
-        "process.id" => Process.pid,
-         "thread.id" => Thread.current.object_id
+      "host.name" => Socket.gethostname,
+      "process.id" => Process.pid,
+      "thread.id" => Thread.current.object_id
     }
 )
