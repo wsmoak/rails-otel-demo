@@ -14,14 +14,15 @@ class CustomersController < ApplicationController
       'original_fruit' => the_fruit
     )
 
-    CONTROLLER_ACCESS_COUNTER.add(
-        1,
-        attributes: {
-            'host.name' => Socket.gethostname,
-            'controller' => 'customers',
-            'action' => 'index',
-            'fruit' => the_fruit,
-        }
+    RailsOTelDemo::Metrics.add(
+      'controller_access',
+      1,
+      attributes: {
+        'host.name' => Socket.gethostname,
+        'controller' => 'customers',
+        'action' => 'index',
+        'fruit' => the_fruit,
+      }
     )
 
     Rails.logger.info "Temporality preference is #{ENV['OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE']}"
@@ -29,13 +30,14 @@ class CustomersController < ApplicationController
     mem = GetProcessMem.new
     Rails.logger.info "Memory usage: #{mem.mb} MB"
 
-    PROCESS_MEMORY_GAUGE.record(
-        mem.mb,
-        attributes: {
-            'host.name' => Socket.gethostname,
-            'process.id' => Process.pid,
-            "thread.id" => Thread.current.object_id
-        }
+     RailsOTelDemo::Metrics.record(
+      'process.memory',
+      mem.mb,
+      attributes: {
+        'host.name' => Socket.gethostname,
+        'process.id' => Process.pid,
+        'thread.id' => Thread.current.object_id
+      }
     )
 
     Rails.logger.info 'END Index view accessed'

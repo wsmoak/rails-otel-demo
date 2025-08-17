@@ -37,25 +37,14 @@ OpenTelemetry::SDK.configure do |c|
   c.use_all() # enables all instrumentation!
 end
 
-# This happens by default in the configuration patch
-# Add a metrics reader for OTLP exporter
-#metric_exporter = OpenTelemetry::Exporter::OTLP::Metrics::MetricsExporter.new
-#periodic_metric_reader = OpenTelemetry::SDK::Metrics::Export::PeriodicMetricReader.new(exporter: metric_exporter)
-#OpenTelemetry.meter_provider.add_metric_reader(periodic_metric_reader)
+# This happens by default in the configuration patch and does not need to be done here.
+#
+# metric_exporter = OpenTelemetry::Exporter::OTLP::Metrics::MetricsExporter.new
+# periodic_metric_reader = OpenTelemetry::SDK::Metrics::Export::PeriodicMetricReader.new(exporter: metric_exporter)
+# OpenTelemetry.meter_provider.add_metric_reader(periodic_metric_reader)
 
 
 OTEL_METER = OpenTelemetry.meter_provider.meter('rails-otel-demo-meter')
-CONTROLLER_ACCESS_COUNTER = OTEL_METER.create_counter(
-  'controller_access',
-  unit: 'requests',
-  description: 'Number of times customers#index was accessed'
-)
-
-PROCESS_MEMORY_GAUGE = OTEL_METER.create_gauge(
-  'process.memory',
-  unit: 'MB',
-  description: 'Memory usage of the Rails process in MB'
-)
 
 PROCESS_MEMORY_OBSERVED_GAUGE = OTEL_METER.create_observable_gauge(
   'process.memory.observed',
