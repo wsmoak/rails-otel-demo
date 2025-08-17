@@ -1,5 +1,5 @@
 
-require_relative 'rails_otel_demo/metrics'
+require_relative '../../lib/rails_otel_demo/metrics'
 
 RailsOTelDemo::Metrics.create_counter(
   'controller_access',

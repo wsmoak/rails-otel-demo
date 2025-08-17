@@ -11,20 +11,22 @@ module RailsOTelDemo
       instrument_registry[instrument_name] || raise("Instrument '#{instrument_name}' not found")
     end
 
-    def self.create_counter(name, unit:, description:)
+    def self.create_counter(instrument_name, unit:, description:)
       instrument = OTEL_METER.create_counter(
         instrument_name,
         unit: unit,
         description: description
       )
+      instrument_registry[instrument_name] = instrument
     end
 
-    def self.create_gauge(name, unit:, description:)
+    def self.create_gauge(instrument_name, unit:, description:)
       instrument = OTEL_METER.create_gauge(
         instrument_name,
         unit: unit,
         description: description
       )
+      instrument_registry[instrument_name] = instrument
     end
 
     def self.add(instrument_name, value, **attributes)
