@@ -45,7 +45,7 @@ end
 
 
 OTEL_METER = OpenTelemetry.meter_provider.meter('rails-otel-demo-meter')
-CUSTOMERS_INDEX_COUNTER = OTEL_METER.create_counter(
+CONTROLLER_ACCESS_COUNTER = OTEL_METER.create_counter(
   'controller_access',
   unit: 'requests',
   description: 'Number of times customers#index was accessed'

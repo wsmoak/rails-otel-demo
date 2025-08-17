@@ -130,11 +130,41 @@ I used Anthropic's Claude 3.5 Sonnet for help with some of the code and to draft
 
 Now let's explore how to add metrics to the example Rails app using the OTel Ruby SDK.
 
-By default the SDK sends deltas for counters, though there is a comment in the code that the default should be cumulative.  See https://github.com/open-telemetry/opentelemetry-ruby/issues/1555
+Add the metrics gems to Gemfile:
+```
+gem "opentelemetry-metrics-sdk", "~> 0.8.0"
+gem "opentelemetry-exporter-otlp-metrics", "~> 0.6.0"
+```
 
-Meanwhile, we can change it with an environment variable.
+Create a counter:
+```
+OTEL_METER = OpenTelemetry.meter_provider.meter('rails-otel-demo-meter')
+
+CONTROLLER_ACCESS_COUNTER = OTEL_METER.create_counter(
+  'controller_access',
+  unit: 'requests',
+  description: 'Number of times customers#index was accessed'
+)
+```
+
+In Prometheus, the metric for a counter will appear as `<name>_<unit>_total`.
+
+Later, add to the counter:
+```
+    CONTROLLER_ACCESS_COUNTER.add(
+        1,
+        attributes: {
+            'host.name' => Socket.gethostname,
+            'controller' => 'customers',
+            'action' => 'index'
+            'fruit' => ['peach', 'apple', 'cherry', 'banana'].sample
+        }
+    )
+```
+
+When choosing attributes, be mindful of the cardinality.
 
 Start the app with:
-`$ OTEL_LOGS_EXPORTER=otlp OTEL_METRICS_EXPORTER=otlp OTEL_METRIC_EXPORT_INTERVAL=5000 OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE=cumulative bundle exec rails server -p 3001`
+`$ OTEL_LOGS_EXPORTER=otlp OTEL_METRICS_EXPORTER=otlp OTEL_METRIC_EXPORT_INTERVAL=20000 OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE=cumulative bundle exec rails server -p 3001`
 
 (Or use the dotenv-rails gem and set these in the .env.development file.)

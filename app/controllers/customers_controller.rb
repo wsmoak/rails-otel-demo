@@ -14,7 +14,7 @@ class CustomersController < ApplicationController
       'original_fruit' => the_fruit
     )
 
-    CUSTOMERS_INDEX_COUNTER.add(
+    CONTROLLER_ACCESS_COUNTER.add(
         1,
         attributes: {
             'host.name' => Socket.gethostname,
