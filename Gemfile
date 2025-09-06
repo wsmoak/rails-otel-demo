@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.0.2"
+gem "rails", "~> 8.1.0.beta1"
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
 # Use sqlite3 as the database for Active Record
@@ -36,7 +36,7 @@ gem "opentelemetry-instrumentation-rails", "~> 0.37.0"
 gem "opentelemetry-sdk", "~> 1.8.1"
 gem "opentelemetry-exporter-otlp", "~> 0.30.0"
 gem "opentelemetry-exporter-otlp-logs", "~> 0.2.1"
-gem "opentelemetry-metrics-sdk", "~> 0.8.0"
+gem "opentelemetry-metrics-sdk", "~> 0.9.0"
 gem "opentelemetry-exporter-otlp-metrics", "~> 0.6.0"
 
 gem "get_process_mem"
