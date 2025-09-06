@@ -1,0 +1,19 @@
+instruments:
+  controller_access:
+    type: counter
+    unit: requests
+    description: "Number of times customers#index was accessed"
+  
+  process.memory:
+    type: gauge
+    unit: MB
+    description: "Memory usage of the Rails process in MB"
+  
+  process.memory.observed:
+    type: observable_gauge
+    unit: MB
+    description: "Memory usage of the process in MB"
+    callback: |
+      mem = GetProcessMem.new
+      puts "THE CALLBACK WAS CALLED! #{Time.now} pid: #{Process.pid} tid: #{Thread.current.object_id} mem: #{mem.mb}"
+      mem.mb

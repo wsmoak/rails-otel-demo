@@ -7,8 +7,47 @@ module RailsOTelDemo
       @instrument_registry ||= {}
     end
 
+    def self.instrument_definitions
+      @instrument_definitions ||= YAML.load_file(Rails.root.join('config', 'metrics_instruments.yml'))['instruments']
+    end
+
+    def self.find_or_create_instrument(instrument_name)
+      return instrument_registry[instrument_name] if instrument_registry[instrument_name]
+
+      definition = instrument_definitions[instrument_name]
+      raise("Instrument definition '#{instrument_name}' not found in YAML") unless definition
+
+      instrument = case definition['type']
+      when 'counter'
+        OTEL_METER.create_counter(
+          instrument_name,
+          unit: definition['unit'],
+          description: definition['description']
+        )
+      when 'gauge'
+        OTEL_METER.create_gauge(
+          instrument_name,
+          unit: definition['unit'],
+          description: definition['description']
+        )
+      when 'observable_gauge'
+        callback_proc = eval("-> { #{definition['callback']} }")
+        OTEL_METER.create_observable_gauge(
+          instrument_name,
+          unit: definition['unit'],
+          description: definition['description'],
+          callback: callback_proc
+        )
+      else
+        raise("Unknown instrument type '#{definition['type']}' for '#{instrument_name}'")
+      end
+
+      instrument_registry[instrument_name] = instrument
+      instrument
+    end
+
     def self.find_instrument(instrument_name)
-      instrument_registry[instrument_name] || raise("Instrument '#{instrument_name}' not found")
+      find_or_create_instrument(instrument_name)
     end
 
     def self.create_counter(instrument_name, unit:, description:)
