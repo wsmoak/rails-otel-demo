@@ -34,5 +34,4 @@
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
-.claude/settings.local.json
-
+.claude
