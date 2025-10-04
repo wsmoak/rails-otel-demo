@@ -98,7 +98,7 @@ cd docker-otel-lgtm
 
 Then visit http://localhost:3000
 
-Note that the default port for the Rails app is also 3000, so start the Rails app with -p 3001 to avoid a conflict.
+Note that the default port for the Rails app is also 3000, so start the Rails app on port 3001 to avoid a conflict.
 
 ### Inflections
 
@@ -165,6 +165,6 @@ Later, add to the counter:
 When choosing attributes, be mindful of the cardinality.
 
 Start the app with:
-`$ OTEL_LOGS_EXPORTER=otlp OTEL_METRICS_EXPORTER=otlp OTEL_METRIC_EXPORT_INTERVAL=20000 OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE=cumulative bundle exec rails server -p 3001`
+`$ OTEL_LOGS_EXPORTER=otlp OTEL_METRICS_EXPORTER=otlp OTEL_METRIC_EXPORT_INTERVAL=20000 OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE=cumulative PORT=3001 bundle exec rails server`
 
 (Or use the dotenv-rails gem and set these in the .env.development file.)
