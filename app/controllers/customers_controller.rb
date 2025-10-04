@@ -1,26 +1,25 @@
 class CustomersController < ApplicationController
-
   def index
-    Rails.logger.info 'START Index view accessed'
+    Rails.logger.info "START Index view accessed"
 
-    the_fruit = ['peach', 'apple', 'cherry', 'banana'].sample
+    the_fruit = [ "peach", "apple", "cherry", "banana" ].sample
     customer_id = rand(1..9_999)
 
     RailsOTelDemo::Logger.log(
-      'A descriptive log message',
-      'acorns' => [true,false].sample,
-      'customer_id' => customer_id,
-      'fruit' => the_fruit,
-      'original_fruit' => the_fruit
+      "A descriptive log message",
+      "acorns" => [ true, false ].sample,
+      "customer_id" => customer_id,
+      "fruit" => the_fruit,
+      "original_fruit" => the_fruit
     )
 
     CONTROLLER_ACCESS_COUNTER.add(
         1,
         attributes: {
-            'host.name' => Socket.gethostname,
-            'controller' => 'customers',
-            'action' => 'index',
-            'fruit' => the_fruit,
+            "host.name" => Socket.gethostname,
+            "controller" => "customers",
+            "action" => "index",
+            "fruit" => the_fruit
         }
     )
 
@@ -32,12 +31,12 @@ class CustomersController < ApplicationController
     PROCESS_MEMORY_GAUGE.record(
         mem.mb,
         attributes: {
-            'host.name' => Socket.gethostname,
-            'process.id' => Process.pid,
+            "host.name" => Socket.gethostname,
+            "process.id" => Process.pid,
             "thread.id" => Thread.current.object_id
         }
     )
 
-    Rails.logger.info 'END Index view accessed'
+    Rails.logger.info "END Index view accessed"
   end
 end
