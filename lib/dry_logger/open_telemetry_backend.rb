@@ -32,10 +32,18 @@ module DryLogger
 
     private
 
+    def otel_logger
+      @otel_logger ||= OpenTelemetry.logger_provider.logger(name: "rails_otel_demo", version: "0.1.0")
+    end
+
     def log(severity, message, **payload)
-      # OpenTelemetry logging implementation goes here
-      # For now, just output to demonstrate the backend is working
-      puts "[OTel #{severity.upcase}] #{message} #{payload.inspect unless payload.empty?}"
+      payload.transform_keys!(&:to_s)
+
+      otel_logger.on_emit(
+        severity_text: severity.to_s.upcase,
+        body: message,
+        attributes: payload
+      )
     end
   end
 end
