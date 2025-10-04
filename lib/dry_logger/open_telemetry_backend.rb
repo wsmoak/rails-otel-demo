@@ -49,14 +49,14 @@ module DryLogger
       )
     end
 
-    def flatten_hash(hash, prefix = nil, separator = ".")
+    def flatten_hash(hash, separator = ".")
       hash.each_with_object({}) do |(key, value), result|
-        new_key = prefix ? "#{prefix}#{separator}#{key}" : key.to_s
-
         if value.is_a?(Hash)
-          result.merge!(flatten_hash(value, new_key, separator))
+          flatten_hash(value, separator).each do |nested_key, nested_value|
+            result["#{key}#{separator}#{nested_key}"] = nested_value
+          end
         else
-          result[new_key] = value
+          result[key.to_s] = value
         end
       end
     end
