@@ -1,7 +1,7 @@
 class CustomersController < ApplicationController
   def index
     logger = Dry::Logger(:rails_otel_demo).add_backend(DryLogger::OpenTelemetryBackend.new)
-    logger.info("Hello from dry-logger in CustomersController#index", customer_id: rand(1..9_999))
+    logger.info("Hello from dry-logger in CustomersController#index", customer_id: rand(1..9_999), a: 5, b: { c: 6, d: 7 })
 
     Rails.logger.info "START Index view accessed"
 

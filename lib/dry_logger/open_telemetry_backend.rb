@@ -37,13 +37,28 @@ module DryLogger
     end
 
     def log(severity, message, **payload)
-      payload.transform_keys!(&:to_s)
+      puts "THE PAYLOAD IS: #{payload.inspect}"
+      payload.deep_stringify_keys!
+      payload = flatten_hash(payload)
+      payload.transform_values!(&:to_s)
 
       otel_logger.on_emit(
         severity_text: severity.to_s.upcase,
         body: message,
         attributes: payload
       )
+    end
+
+    def flatten_hash(hash, prefix = nil, separator = ".")
+      hash.each_with_object({}) do |(key, value), result|
+        new_key = prefix ? "#{prefix}#{separator}#{key}" : key.to_s
+
+        if value.is_a?(Hash)
+          result.merge!(flatten_hash(value, new_key, separator))
+        else
+          result[new_key] = value
+        end
+      end
     end
   end
 end
