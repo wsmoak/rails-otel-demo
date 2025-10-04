@@ -1,5 +1,8 @@
 class CustomersController < ApplicationController
   def index
+    logger = Dry::Logger.new
+    logger.info "Hello from dry-logger"
+
     Rails.logger.info "START Index view accessed"
 
     the_fruit = [ "peach", "apple", "cherry", "banana" ].sample
