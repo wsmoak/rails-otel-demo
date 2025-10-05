@@ -1,5 +1,11 @@
 class CustomersController < ApplicationController
   def index
+    logger = ApplicationLogger.build(:rails_otel_demo)
+
+    # Or (this sends to the default dry-logger location, which is STDOUT, as well as to OTel):
+    # logger = Dry::Logger(:rails_otel_demo).add_backend(DryLogger::OpenTelemetryBackend.new)
+    logger.info("Hello from dry-logger in CustomersController#index", customer_id: rand(1..9_999), a: 5, b: { c: 6, d: 7 })
+
     Rails.logger.info "START Index view accessed"
 
     the_fruit = [ "peach", "apple", "cherry", "banana" ].sample
