@@ -168,3 +168,32 @@ Start the app with:
 `$ OTEL_LOGS_EXPORTER=otlp OTEL_METRICS_EXPORTER=otlp OTEL_METRIC_EXPORT_INTERVAL=20000 OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE=cumulative PORT=3001 bundle exec rails server`
 
 (Or use the dotenv-rails gem and set these in the .env.development file.)
+
+## Logger Bridge
+
+This application implements a bridge between Ruby's Logger and OpenTelemetry logs, allowing standard Rails logging calls to automatically send log data to OpenTelemetry.
+
+### Implementation
+
+The logger bridge patches three classes in `config/initializers/open_telemetry.rb`:
+
+1. **Logger** - Intercepts `format_message` to emit logs to OpenTelemetry's logger provider with proper severity mapping
+2. **ActiveSupport::Logger** - Prevents duplicate logs when using the `broadcast` method
+3. **ActiveSupport::BroadcastLogger** - Ensures only one logger emits to OpenTelemetry when Rails broadcasts logs to multiple destinations
+
+### How It Works
+
+When you call `Rails.logger.info "message"`, the patched Logger:
+1. Formats the message normally
+2. Maps the severity level (debug/info/warn/error/fatal) to OpenTelemetry's SeverityNumber
+3. Emits the log to OpenTelemetry with the current context
+4. Returns the formatted message
+
+The `ActiveSupport::BroadcastLogger` patch is critical for Rails applications, as Rails uses broadcast logging to send logs to multiple destinations (console, files, etc.). Without this patch, each broadcasted logger would emit to OpenTelemetry, creating duplicate log entries. The patch temporarily sets `@skip_otel_emit = true` on all broadcast destinations except the first, ensuring only one emission per log statement.
+
+### Credits
+
+This implementation is based on the OpenTelemetry Ruby Logger instrumentation from:
+- [opentelemetry-ruby-contrib PR #983](https://github.com/open-telemetry/opentelemetry-ruby-contrib/pull/983) by the OpenTelemetry community
+- Similar approach used in [newrelic-ruby-agent PR #1019](https://github.com/newrelic/newrelic-ruby-agent/pull/1019)
+
