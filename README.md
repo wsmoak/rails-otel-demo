@@ -168,3 +168,70 @@ Start the app with:
 `$ OTEL_LOGS_EXPORTER=otlp OTEL_METRICS_EXPORTER=otlp OTEL_METRIC_EXPORT_INTERVAL=20000 OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE=cumulative PORT=3001 bundle exec rails server`
 
 (Or use the dotenv-rails gem and set these in the .env.development file.)
+
+## Dry Logger
+
+Now let's explore how to use [dry-logger](https://dry-rb.org/gems/dry-logger/) with a custom OpenTelemetry backend.
+
+Add the dry-logger gem to Gemfile:
+```ruby
+gem "dry-logger"
+```
+
+Create a custom OpenTelemetry backend in [lib/dry_logger/open_telemetry_backend.rb](lib/dry_logger/open_telemetry_backend.rb):
+
+```ruby
+module DryLogger
+  class OpenTelemetryBackend
+    def info(message = nil, **payload)
+      log(:info, message, **payload)
+    end
+
+    # Similar methods for debug, warn, error, fatal, unknown...
+
+    private
+
+    def otel_logger
+      @otel_logger ||= OpenTelemetry.logger_provider.logger(
+        name: "rails_otel_demo",
+        version: "0.1.0"
+      )
+    end
+
+    def log(severity, message, **payload)
+      payload.deep_stringify_keys!
+      payload = flatten_hash(payload)
+      payload.transform_values!(&:to_s)
+
+      otel_logger.on_emit(
+        severity_text: severity.to_s.upcase,
+        body: message,
+        attributes: payload
+      )
+    end
+
+    def flatten_hash(hash, separator = ".")
+      hash.each_with_object({}) do |(key, value), result|
+        if value.is_a?(Hash)
+          flatten_hash(value, separator).each do |nested_key, nested_value|
+            result["#{key}#{separator}#{nested_key}"] = nested_value
+          end
+        else
+          result[key] = value
+        end
+      end
+    end
+  end
+end
+```
+
+The backend flattens nested hashes and stringifies all values to ensure compatibility with OpenTelemetry's attribute requirements.
+
+Use it in your controller:
+
+```ruby
+logger = Dry::Logger(:rails_otel_demo).add_backend(DryLogger::OpenTelemetryBackend.new)
+logger.info("Hello from dry-logger", customer_id: rand(1..9_999), a: 5, b: { c: 6, d: 7 })
+```
+
+Nested attributes like `b: { c: 6, d: 7 }` will be flattened to `b.c` and `b.d` in the OpenTelemetry log output.
