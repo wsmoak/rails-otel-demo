@@ -26,6 +26,8 @@ module DryLogger
       log(:unknown, message, **payload)
     end
 
+    # Note: this duplication can be removed by using method_missing.
+
     def close
       # No cleanup needed
     end
@@ -37,7 +39,6 @@ module DryLogger
     end
 
     def log(severity, message, **payload)
-      puts "THE PAYLOAD IS: #{payload.inspect}"
       payload.deep_stringify_keys!
       payload = flatten_hash(payload)
       payload.transform_values!(&:to_s)
