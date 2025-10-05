@@ -63,7 +63,7 @@ PROCESS_MEMORY_OBSERVED_GAUGE = OTEL_METER.create_observable_gauge(
   description: "Memory usage of the process in MB",
   callback: -> {
     mem = GetProcessMem.new
-    puts "THE CALLBACK WAS CALLED! #{Time.now} pid: #{Process.pid} tid: #{Thread.current.object_id} mem: #{mem.mb}"
+    # puts "THE CALLBACK WAS CALLED! #{Time.now} pid: #{Process.pid} tid: #{Thread.current.object_id} mem: #{mem.mb}"
     mem.mb
   }
 )
