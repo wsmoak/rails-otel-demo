@@ -56,7 +56,7 @@ module DryLogger
             result["#{key}#{separator}#{nested_key}"] = nested_value
           end
         else
-          result[key.to_s] = value
+          result[key] = value
         end
       end
     end
