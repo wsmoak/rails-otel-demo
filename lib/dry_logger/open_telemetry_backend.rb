@@ -2,32 +2,18 @@
 
 module DryLogger
   class OpenTelemetryBackend
-    def debug(message = nil, **payload)
-      log(:debug, message, **payload)
+    VALID_SEVERITIES = %i[debug info warn error fatal unknown].freeze
+
+    def method_missing(method_name, message = nil, **payload)
+      if VALID_SEVERITIES.include?(method_name)
+        log(method_name, message, **payload)
+      else
+        super
+      end
     end
 
-    def info(message = nil, **payload)
-      log(:info, message, **payload)
-    end
-
-    def warn(message = nil, **payload)
-      log(:warn, message, **payload)
-    end
-
-    def error(message = nil, **payload)
-      log(:error, message, **payload)
-    end
-
-    def fatal(message = nil, **payload)
-      log(:fatal, message, **payload)
-    end
-
-    def unknown(message = nil, **payload)
-      log(:unknown, message, **payload)
-    end
-
-    def close
-      # No cleanup needed
+    def respond_to_missing?(method_name, include_private = false)
+      VALID_SEVERITIES.include?(method_name) || super
     end
 
     private
@@ -41,6 +27,7 @@ module DryLogger
       payload.deep_stringify_keys!
       payload = flatten_hash(payload)
       payload.transform_values!(&:to_s)
+      puts "NOW THE PAYLOAD IS: #{payload.inspect}"
 
       otel_logger.on_emit(
         severity_text: severity.to_s.upcase,
