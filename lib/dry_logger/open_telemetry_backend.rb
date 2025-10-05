@@ -39,15 +39,26 @@ module DryLogger
     end
 
     def log(severity, message, **payload)
+      severity_text = severity.to_s.upcase
+      json_payload = payload.to_json
+
       payload.deep_stringify_keys!
       payload = flatten_hash(payload)
       payload.transform_values!(&:to_s)
 
-      otel_logger.on_emit(
-        severity_text: severity.to_s.upcase,
-        body: message,
-        attributes: payload
-      )
+      if message.present?
+        otel_logger.on_emit(
+          severity_text: severity_text,
+          body: message,
+          attributes: payload
+        )
+      else
+        otel_logger.on_emit(
+          severity_text: severity_text,
+          body: json_payload,
+          attributes: payload
+        )
+      end
     end
 
     def flatten_hash(hash, separator = ".")

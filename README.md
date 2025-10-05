@@ -178,7 +178,9 @@ Add the dry-logger gem to Gemfile:
 gem "dry-logger"
 ```
 
-Create a custom OpenTelemetry backend in [lib/dry_logger/open_telemetry_backend.rb](lib/dry_logger/open_telemetry_backend.rb):
+### Creating the Custom OpenTelemetry Backend
+
+The custom backend in [lib/dry_logger/open_telemetry_backend.rb](lib/dry_logger/open_telemetry_backend.rb) implements all standard logging methods (debug, info, warn, error, fatal, unknown) and delegates to the `log` method:
 
 ```ruby
 module DryLogger
@@ -199,15 +201,26 @@ module DryLogger
     end
 
     def log(severity, message, **payload)
+      severity_text = severity.to_s.upcase
+      json_payload = payload.to_json
+
       payload.deep_stringify_keys!
       payload = flatten_hash(payload)
       payload.transform_values!(&:to_s)
 
-      otel_logger.on_emit(
-        severity_text: severity.to_s.upcase,
-        body: message,
-        attributes: payload
-      )
+      if message.present?
+        otel_logger.on_emit(
+          severity_text: severity_text,
+          body: message,
+          attributes: payload
+        )
+      else
+        otel_logger.on_emit(
+          severity_text: severity_text,
+          body: json_payload,
+          attributes: payload
+        )
+      end
     end
 
     def flatten_hash(hash, separator = ".")
@@ -225,13 +238,77 @@ module DryLogger
 end
 ```
 
-The backend flattens nested hashes and stringifies all values to ensure compatibility with OpenTelemetry's attribute requirements.
+### How the Backend Works
 
-Use it in your controller:
+The backend handles two logging scenarios:
+
+**With a message:**
+```ruby
+logger.info("Customer retrieved", customer_id: 123, metadata: { source: "api" })
+```
+- The message becomes the log body: `"Customer retrieved"`
+- The payload is flattened and added as attributes: `customer_id: "123"`, `metadata.source: "api"`
+
+**Without a message (payload only):**
+```ruby
+logger.info(customer_id: 123, metadata: { source: "api" })
+```
+- The JSON-serialized payload becomes the log body: `"{\"customer_id\":123,\"metadata\":{\"source\":\"api\"}}"`
+- The flattened payload is still included as attributes: `customer_id: "123"`, `metadata.source: "api"`
+
+This dual approach ensures:
+1. Readable log messages when available
+2. Searchable structured attributes in both cases
+3. Full payload visibility even when no message is provided
+
+### Key Features
+
+- **Nested hash flattening**: Attributes like `{ b: { c: 6, d: 7 } }` become `b.c` and `b.d`
+- **Type conversion**: All attribute values are converted to strings for OpenTelemetry compatibility
+- **Flexible logging**: Supports both message-based and payload-only logging patterns
+
+### Usage
+
+There are two ways to use the OpenTelemetry backend with dry-logger:
+
+#### Option 1: OpenTelemetry Only (Recommended for Production)
+
+Use the `ApplicationLogger.build` helper to create a logger that sends logs exclusively to OpenTelemetry:
+
+```ruby
+logger = ApplicationLogger.build(:rails_otel_demo)
+logger.info("Hello from dry-logger", customer_id: rand(1..9_999), a: 5, b: { c: 6, d: 7 })
+```
+
+This approach:
+- Sends logs only to OpenTelemetry (no STDOUT output)
+- Cleaner for production environments where you want centralized logging
+- Uses the helper defined in [app/lib/application_logger.rb](app/lib/application_logger.rb)
+
+#### Option 2: OpenTelemetry + Default Stream (Useful for Development)
+
+Add the OpenTelemetry backend to an existing dry-logger instance to send logs to both the default destination (STDOUT) and OpenTelemetry:
 
 ```ruby
 logger = Dry::Logger(:rails_otel_demo).add_backend(DryLogger::OpenTelemetryBackend.new)
 logger.info("Hello from dry-logger", customer_id: rand(1..9_999), a: 5, b: { c: 6, d: 7 })
 ```
 
-Nested attributes like `b: { c: 6, d: 7 }` will be flattened to `b.c` and `b.d` in the OpenTelemetry log output.
+This approach:
+- Sends logs to both STDOUT and OpenTelemetry
+- Helpful during development when you want to see logs locally
+- Allows you to use dry-logger's default formatting alongside OpenTelemetry
+
+#### Examples
+
+Both approaches support message-based and payload-only logging:
+
+```ruby
+# With message
+logger.info("Customer retrieved", customer_id: 123, a: 5, b: { c: 6, d: 7 })
+
+# Without message (payload only)
+logger.info(event: "customer_created", customer_id: rand(1..9_999), metadata: { source: "web" })
+```
+
+See [app/controllers/customers_controller.rb:3-7](app/controllers/customers_controller.rb#L3-L7) for usage examples.
