@@ -173,6 +173,11 @@ Start the app with:
 
 This application implements a bridge between Ruby's Logger and OpenTelemetry logs, allowing standard Rails logging calls to automatically send log data to OpenTelemetry.
 
+This implementation is based on the OpenTelemetry Ruby Logger instrumentation from:
+- [opentelemetry-ruby-contrib PR #983](https://github.com/open-telemetry/opentelemetry-ruby-contrib/pull/983) by the OpenTelemetry community
+
+As mentioned in that PR, it is similar to the approach used in [newrelic-ruby-agent PR #1019](https://github.com/newrelic/newrelic-ruby-agent/pull/1019)
+
 ### Implementation
 
 The logger bridge patches three classes in `config/initializers/open_telemetry.rb`:
@@ -190,10 +195,3 @@ When you call `Rails.logger.info "message"`, the patched Logger:
 4. Returns the formatted message
 
 The `ActiveSupport::BroadcastLogger` patch is critical for Rails applications, as Rails uses broadcast logging to send logs to multiple destinations (console, files, etc.). Without this patch, each broadcasted logger would emit to OpenTelemetry, creating duplicate log entries. The patch temporarily sets `@skip_otel_emit = true` on all broadcast destinations except the first, ensuring only one emission per log statement.
-
-### Credits
-
-This implementation is based on the OpenTelemetry Ruby Logger instrumentation from:
-- [opentelemetry-ruby-contrib PR #983](https://github.com/open-telemetry/opentelemetry-ruby-contrib/pull/983) by the OpenTelemetry community
-- Similar approach used in [newrelic-ruby-agent PR #1019](https://github.com/newrelic/newrelic-ruby-agent/pull/1019)
-
