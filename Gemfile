@@ -34,7 +34,7 @@ gem "bootsnap", require: false
 # OpenTelemetry
 gem "opentelemetry-instrumentation-rails", "~> 0.39.1"
 gem "opentelemetry-sdk", "~> 1.10.0"
-gem "opentelemetry-exporter-otlp", "~> 0.30.0"
+gem "opentelemetry-exporter-otlp", "~> 0.31.1"
 gem "opentelemetry-exporter-otlp-logs", "~> 0.2.2"
 gem "opentelemetry-metrics-sdk", "~> 0.11.0"
 gem "opentelemetry-exporter-otlp-metrics", "~> 0.6.1"
