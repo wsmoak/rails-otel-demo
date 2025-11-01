@@ -10,23 +10,19 @@ Rails.application.config.after_initialize do
     "unknown"
   end
 
-  # Ensure the meter from the OpenTelemetry initializer is available
-  if defined?(OTEL_METER)
-    build_info_gauge = OTEL_METER.create_observable_gauge(
-      "rails_otel_demo_build_info",
-      description: "Build information for rails_otel_demo (observable gauge)",
-      # callback returns the observed numeric value (quantity = 1)
-      callback: -> { 1 }
-    )
+  meter = OpenTelemetry.meter_provider.meter("rails-otel-demo-init")
+  build_info_gauge = meter.create_observable_gauge(
+    "rails_otel_demo_build_info",
+    description: "Build information for rails_otel_demo (observable gauge)",
+    callback: ->(*args) {
+      Rails.logger.info "build_info callback called at #{Time.now} version=#{version} pid=#{Process.pid} tid=#{Thread.current.object_id} args_count=#{args.length}"
+      1
+    }
+  )
 
-    # Observe once and include the version as an attribute. The value is always 1.
-    build_info_gauge.observe(
-      attributes: {
-        "version" => version,
-        "testing" => "826"
-      }
-    )
-  else
-    Rails.logger.warn("OTEL_METER not defined; rails_otel_demo_build_info metric not registered")
-  end
+  Rails.logger.info "Adding attributes to build_info_gauge at #{Time.now} version=#{version} pid=#{Process.pid} tid=#{Thread.current.object_id}"
+  build_info_gauge.add_attributes(
+    "version" => version,
+    "testing" => "add_attributes 903"
+  )
 end
