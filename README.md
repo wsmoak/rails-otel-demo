@@ -1,5 +1,19 @@
 # Rails OpenTelemetry Demo
 
+## Development
+
+This project includes a devcontainer configuration for use with DevPod. To get started:
+
+1. Install [DevPod](https://devpod.sh/)
+2. Open the project in DevPod
+3. The devcontainer will automatically run `./bin/setup` which:
+   - Installs Ruby dependencies with `bundle install`
+   - Prepares the database with `rails db:prepare` (creates database and runs migrations)
+   - Clears logs and temp files
+4. Start the server with `rails server`
+
+The devcontainer forwards port 3000 for the Rails server.
+
 ## Configuring OpenTelemetry Logging in a Rails Application
 
 OpenTelemetry provides powerful observability capabilities for Rails applications. Let's explore how to configure logging.
