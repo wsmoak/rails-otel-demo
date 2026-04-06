@@ -37,7 +37,7 @@ gem "opentelemetry-sdk", "~> 1.10.0"
 gem "opentelemetry-exporter-otlp", "~> 0.32.0"
 gem "opentelemetry-exporter-otlp-logs", "~> 0.2.2"
 gem "opentelemetry-metrics-sdk", "~> 0.12.0"
-gem "opentelemetry-exporter-otlp-metrics", "~> 0.6.1"
+gem "opentelemetry-exporter-otlp-metrics", "~> 0.7.0"
 
 gem "get_process_mem"
 
