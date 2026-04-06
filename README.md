@@ -182,3 +182,5 @@ Start the app with:
 `$ OTEL_LOGS_EXPORTER=otlp OTEL_METRICS_EXPORTER=otlp OTEL_METRIC_EXPORT_INTERVAL=20000 OTEL_EXPORTER_OTLP_METRICS_TEMPORALITY_PREFERENCE=cumulative PORT=3001 bundle exec rails server`
 
 (Or use the dotenv-rails gem and set these in the .env.development file.)
+
+It's Monday April 6th at 2:16 PM
